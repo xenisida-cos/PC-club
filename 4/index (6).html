@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AWAKEN | Игровые зоны, тарифы и демо-бронирование</title>
+  <meta id="metaDescription" name="description"
+    content="Учебный демосайт AWAKEN: игровые зоны, условные тарифы и демонстрационная форма бронирования компьютерного клуба." />
+  <meta id="metaKeywords" name="keywords"
+    content="учебный проект, компьютерный клуб, игровые зоны, тарифы, демо-бронирование, AWAKEN" />
+  <meta property="og:type" content="website" />
+  <meta id="ogTitle" property="og:title" content="AWAKEN | Игровые зоны, тарифы и демо-бронирование" />
+  <meta id="ogDescription" property="og:description"
+    content="Учебный демосайт AWAKEN: игровые зоны, условные тарифы и демонстрационная форма бронирования компьютерного клуба." />
+  <meta id="ogLocale" property="og:locale" content="ru_RU" />
+  <meta property="og:site_name" content="AWAKEN" />
+  <meta name="twitter:card" content="summary" />
+  <meta id="twitterTitle" name="twitter:title" content="AWAKEN | Игровые зоны, тарифы и демо-бронирование" />
+  <meta id="twitterDescription" name="twitter:description"
+    content="Учебный демосайт AWAKEN: игровые зоны, условные тарифы и демонстрационная форма бронирования компьютерного клуба." />
+  <script id="websiteSchema" type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "AWAKEN",
+        "description": "Учебный демосайт об игровых зонах, условных тарифах и демонстрационной форме бронирования компьютерного клуба.",
+        "inLanguage": "ru"
+      }
+    </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Tektur:wght@500;700&family=Exo+2:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style (6).css" />
+</head>
+
+<body>
+  <a class="skip-link" href="#mainContent">Перейти к основному содержимому</a>
+  <div id="loader">
+    <p class="mono">ПРОБУЖДЕНИЕ СИСТЕМЫ...</p>
+    <div class="bar"><i id="loadBar"></i></div>
+  </div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div id="scrollProgress" role="progressbar" aria-label="Прогресс страницы" aria-valuemin="0" aria-valuemax="100"
+    aria-valuenow="0">
+    <span></span>
+  </div>
+
+  <header id="top">
+    <a class="logo" href="#hero"><svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="#3DE6FF"
+        stroke-width="1.5">
+        <path d="M15 2l11 6.5v13L15 28 4 21.5v-13z" />
+        <path d="M9 18l6-7 6 7" />
+      </svg><span class="brand-copy"><b>AWAKEN</b><small>GAMING NETWORK</small></span></a>
+    <nav id="nav">
+      <a href="#tariffs">Тарифы</a><a href="#zones">Зоны</a><a href="#map">Карта</a><a href="#quests">Акции</a><a
+        href="#contacts">Контакты</a>
+    </nav>
+    <div class="head-right">
+      <span class="head-status"><i></i><span>ОНЛАЙН 24/7</span></span>
+      <select id="lang" aria-label="Язык">
+        <option>RU</option>
+        <option>UA</option>
+        <option>EN</option>
+      </select>
+      <button id="calmMode" class="calm-toggle mono" type="button" aria-label="Спокойный режим" aria-pressed="false"
+        title="Спокойный режим">
+        ◐
+      </button>
+      <a class="btn" href="#map">Забронировать</a>
+      <button id="burger" aria-label="Меню" aria-expanded="false" aria-controls="nav">☰</button>
+    </div>
+  </header>
+
+  <main id="mainContent" tabindex="-1">
+    <section id="hero">
+      <div class="panel hero-box">
+        <p class="mono tag">
+          [ СИСТЕМА ] Обнаружен новый игрок
+          <span class="cipher-fragment" title="Фрагмент 1/6" aria-hidden="true">A</span>
+        </p>
+        <h1 id="h1" class="glitch">Пробуди свой уровень</h1>
+        <p>
+          Компьютерный клуб AWAKEN: RTX-железо, 240 Гц и кресла, в которых хочется остаться до
+          утра.
+        </p>
+        <p class="mono mini">ПК: 60 | Пинг: &lt;5 мс | Открыто: 24/7</p>
+        <div class="row">
+          <a class="btn" href="#map">Забронировать место</a><a class="btn ghost" href="#tariffs">Смотреть тарифы</a>
+        </div>
+        <div class="system-console" role="status">
+          <span class="console-led" aria-hidden="true"></span>
+          <span class="mono console-label">AWAKEN // SYSTEM</span>
+          <span id="consoleMessage">Система готова. Выберите зону.</span>
+        </div>
+      </div>
+      <div class="setup" aria-hidden="true">
+        <svg viewBox="0 0 420 340">
+          <defs>
+            <linearGradient id="sg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#0D1430" />
+              <stop offset="1" stop-color="#1E3A8A" />
+            </linearGradient>
+            <radialGradient id="gl">
+              <stop offset="0" stop-color="#2F6BFF" stop-opacity=".55" />
+              <stop offset="1" stop-color="#2F6BFF" stop-opacity="0" />
+            </radialGradient>
+          </defs>
+          <ellipse cx="210" cy="305" rx="200" ry="28" fill="url(#gl)" />
+          <path d="M150 310q60-80 120 0z" fill="#7B3FF2" opacity=".45" />
+          <g class="fl">
+            <rect x="50" y="20" width="320" height="190" fill="url(#sg)" stroke="#3DE6FF" stroke-width="2" />
+            <path d="M72 52h120M72 74h200M72 96h150" stroke="#3DE6FF" opacity=".5" stroke-width="3" />
+            <rect x="262" y="112" width="86" height="78" fill="none" stroke="#7B3FF2" stroke-width="2" />
+            <path d="M72 188l44-44 30 20 44-52 40 40" fill="none" stroke="#2BFFB0" stroke-width="2" />
+            <path d="M210 210v32M150 244h120" stroke="#3DE6FF" stroke-width="3" />
+          </g>
+          <rect x="90" y="266" width="240" height="26" fill="#0D1430" stroke="#3DE6FF" />
+          <path d="M108 279h204" stroke="#3DE6FF" stroke-dasharray="6 4" opacity=".6" />
+        </svg><span class="chip c1 mono">RTX 4070</span><span class="chip c2 mono">240 Hz</span><span
+          class="chip c3 mono">PING 4 ms</span>
+      </div>
+      <a class="scroll" href="#stats" aria-label="Прокрутить">⌄</a>
+    </section>
+
+    <section id="stats" class="alt">
+      <div class="wrap stats">
+        <div><b class="num" data-to="60">0</b><span>ПК</span></div>
+        <div><b class="num" data-to="240">0</b><span>Гц</span></div>
+        <div><b>24/7</b><span>работаем</span></div>
+        <div><b class="num" data-to="5">0</b><span>зон</span></div>
+      </div>
+    </section>
+
+    <div class="marq" aria-hidden="true">
+      <div>
+        CS2<b>✦</b>DOTA 2<b>✦</b>VALORANT<b>✦</b>FORTNITE<b>✦</b>APEX<b>✦</b>GTA
+        V<b>✦</b>MINECRAFT<b>✦</b>LOL<b>✦</b>CS2<b>✦</b>DOTA
+        2<b>✦</b>VALORANT<b>✦</b>FORTNITE<b>✦</b>APEX<b>✦</b>GTA
+        V<b>✦</b>MINECRAFT<b>✦</b>LOL<b>✦</b>CS2<b>✦</b>DOTA
+        2<b>✦</b>VALORANT<b>✦</b>FORTNITE<b>✦</b>APEX<b>✦</b>GTA
+        V<b>✦</b>MINECRAFT<b>✦</b>LOL<b>✦</b>CS2<b>✦</b>DOTA
+        2<b>✦</b>VALORANT<b>✦</b>FORTNITE<b>✦</b>APEX<b>✦</b>GTA V<b>✦</b>MINECRAFT<b>✦</b>LOL<b>✦</b>
+      </div>
+    </div>
+
+    <section id="about">
+      <div class="wrap two">
+        <div>
+          <h2>О клубе</h2>
+          <p>
+            Зал на 60 мест с мониторами 240 Гц и видеокартами RTX. Пинг до серверов меньше 5 мс,
+            кресла рассчитаны на долгие катки.
+          </p>
+          <p>
+            Есть кофе-бар, кухня и отдельная комната для команд. Администратор на месте
+            круглосуточно.
+          </p>
+        </div>
+        <div class="panel photo">
+          <span class="mono tag">[ ЗАЛ ]
+            <span class="cipher-fragment" title="Фрагмент 2/6" aria-hidden="true">W</span></span><svg class="hall"
+            viewBox="0 0 360 200" aria-hidden="true">
+            <defs>
+              <linearGradient id="m2" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#1E3A8A" />
+                <stop offset="1" stop-color="#7B3FF2" />
+              </linearGradient>
+              <g id="mn">
+                <rect width="44" height="28" fill="url(#m2)" stroke="#3DE6FF" />
+                <path d="M22 28v8M13 36h18" stroke="#3DE6FF" />
+              </g>
+            </defs>
+            <ellipse cx="180" cy="190" rx="170" ry="14" fill="#2F6BFF" opacity=".25" />
+            <use href="#mn" x="30" y="30" opacity="1.0" />
+            <use href="#mn" x="92" y="30" opacity="1.0" />
+            <use href="#mn" x="154" y="30" opacity="1.0" />
+            <use href="#mn" x="216" y="30" opacity="1.0" />
+            <use href="#mn" x="278" y="30" opacity="1.0" />
+            <use href="#mn" x="22" y="82" opacity="0.85" />
+            <use href="#mn" x="84" y="82" opacity="0.85" />
+            <use href="#mn" x="146" y="82" opacity="0.85" />
+            <use href="#mn" x="208" y="82" opacity="0.85" />
+            <use href="#mn" x="270" y="82" opacity="0.85" />
+            <use href="#mn" x="14" y="134" opacity="0.7" />
+            <use href="#mn" x="76" y="134" opacity="0.7" />
+            <use href="#mn" x="138" y="134" opacity="0.7" />
+            <use href="#mn" x="200" y="134" opacity="0.7" />
+            <use href="#mn" x="262" y="134" opacity="0.7" />
+          </svg>
+          <p class="muted">Место под фото клуба</p>
+          <span class="cipher-fragment" title="Фрагмент 3/6" aria-hidden="true">A</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="tariffs" class="alt">
+      <div class="wrap">
+        <h2>Тарифы</h2>
+        <button id="compareZones" class="btn ghost compare-trigger" type="button">
+          Сравнить зоны
+        </button>
+        <div class="grid4" id="tariffGrid"></div>
+      </div>
+    </section>
+
+    <section id="zones">
+      <div class="wrap">
+        <h2>Игровые зоны</h2>
+        <span class="cipher-fragment cipher-marker" title="Фрагмент 4/6" aria-hidden="true">K</span>
+        <div class="tabs" id="zoneTabs"></div>
+        <div id="zoneTooltip" class="zone-tooltip" role="status" aria-live="polite" hidden></div>
+        <div class="panel zone-card" id="zoneCard"></div>
+      </div>
+    </section>
+
+    <section id="adv" class="alt">
+      <div class="wrap">
+        <h2>Преимущества</h2>
+        <div class="grid3">
+          <div class="panel">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="12" />
+              <path d="M8 20h8M12 16v4" />
+            </svg>
+            <h3>Мощные ПК</h3>
+            <p>RTX 4070, процессоры последнего поколения.</p>
+          </div>
+          <div class="panel">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M2 9a15 15 0 0 1 20 0M5 13a10 10 0 0 1 14 0M8.5 16.5a5 5 0 0 1 7 0" />
+              <circle cx="12" cy="20" r="1" />
+            </svg>
+            <h3>Быстрый интернет</h3>
+            <p>Оптика, пинг до 5 мс.</p>
+          </div>
+          <div class="panel">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 3h8l1 9H7zM5 12h14M12 12v6M8 21l4-3 4 3" />
+            </svg>
+            <h3>Удобные кресла</h3>
+            <p>Эргономика для долгих сессий.</p>
+          </div>
+          <div class="panel">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 8h12v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM16 10h2a2 2 0 0 1 0 4h-2M7 2v3M11 2v3" />
+            </svg>
+            <h3>Кофе-бар и кухня</h3>
+            <p>Еда и напитки не отрывают от игры.</p>
+          </div>
+          <div class="panel">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 14A8 8 0 0 1 10 4a8 8 0 1 0 10 10z" />
+            </svg>
+            <h3>Ночные тарифы</h3>
+            <p>С 23:00 до 8:00 дешевле.</p>
+          </div>
+          <div class="panel">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" />
+              <path d="M9 12l2 2 4-4" />
+            </svg>
+            <h3>Администратор 24/7</h3>
+            <p>Поможет в любой момент.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="quests">
+      <div class="wrap">
+        <h2>Акции</h2>
+        <span class="cipher-fragment cipher-marker" title="Фрагмент 5/6" aria-hidden="true">E</span>
+        <div class="grid3">
+          <div class="panel">
+            <span class="mono tag">[ КВЕСТ ]</span>
+            <h3>Ночной рейд</h3>
+            <p class="reward mono">Награда: -30% ночью</p>
+            <p>Будни, с 23:00 до 8:00.</p>
+            <small class="muted">До 31 декабря</small>
+          </div>
+          <div class="panel">
+            <span class="mono tag">[ КВЕСТ ]</span>
+            <h3>Пати из 5</h3>
+            <p class="reward mono">Награда: +1 час бесплатно</p>
+            <p>При брони Team Room на 3 часа.</p>
+            <small class="muted">Постоянно</small>
+          </div>
+          <div class="panel">
+            <span class="mono tag">[ КВЕСТ ]</span>
+            <h3>Первый вход</h3>
+            <p class="reward mono">Награда: 30 минут в подарок</p>
+            <p>Для новых игроков.</p>
+            <small class="muted">Постоянно</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reviews" class="alt">
+      <div class="wrap">
+        <h2>Отзывы</h2>
+        <div class="panel review" id="review"></div>
+        <div class="row">
+          <button class="btn ghost" id="prev" type="button" aria-label="Предыдущий отзыв">
+            ←</button><button class="btn ghost" id="next" type="button" aria-label="Следующий отзыв">
+            →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="map">
+      <div class="wrap">
+        <h2>Бронирование</h2>
+        <div class="panel book">
+          <div class="booking-layout">
+            <div class="booking-main">
+              <div class="wbar mono"><span>[ БРОНИРОВАНИЕ ]</span><i></i><i></i><i></i></div>
+              <div class="steps mono">
+                <span id="stepLabel">ШАГ 1 / 4</span>
+                <div class="bar"><i id="stepBar"></i></div>
+              </div>
+              <div class="step" data-step="1">
+                <div id="hallMap" class="hallmap" aria-label="Схема зала"></div>
+                <label>Зона<select id="fZone"></select></label>
+                <label>Тариф<select id="fTariff">
+                    <option value="1">Почасовой</option>
+                    <option value="0.9">Пакет 3 часа (-10%)</option>
+                    <option value="0.7">Ночной (-30%)</option>
+                  </select></label>
+              </div>
+              <div class="step" data-step="2" hidden>
+                <label>Дата<input type="date" id="fDate" /></label>
+                <label>Время<select id="fTime"></select></label>
+                <label>Длительность<select id="fDur">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>5</option>
+                  </select></label>
+                <p class="mono total" id="total"></p>
+              </div>
+              <div class="step" data-step="3" hidden>
+                <div class="legend mono">
+                  <span class="free">свободно</span><span class="busy">занято</span><span class="sel">выбрано</span>
+                </div>
+                <div class="seats" id="seats"></div>
+                <p class="mono muted" id="seatInfo">Выберите место</p>
+              </div>
+              <div class="step" data-step="4" hidden>
+                <label>Имя или ник *<input id="fName" /></label>
+                <label>Телефон *<input id="fPhone" placeholder="+380 XX XXX XX XX" inputmode="tel" /></label>
+                <label>Email<input id="fEmail" type="email" inputmode="email" /></label>
+                <label>Telegram<input id="fTg" placeholder="@nick" /></label>
+                <label>Комментарий<textarea id="fNote" maxlength="300"></textarea></label>
+                <input id="hp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+                <label class="check"><input type="checkbox" id="fAgree" /> Согласен на обработку данных *</label>
+              </div>
+              <p class="error" id="err"></p>
+              <div class="row">
+                <button class="btn ghost" id="back">Назад</button><button class="btn" id="forward">Далее</button>
+              </div>
+            </div>
+            <aside class="booking-summary" aria-live="polite">
+              <div class="summary-top mono">
+                <span class="summary-led"></span><span>СВОДКА МИССИИ</span>
+              </div>
+              <p class="summary-label mono">ТЕКУЩИЙ ЭТАП</p>
+              <h3 id="missionTitle">Выбор зоны</h3>
+              <ol class="mission-list">
+                <li data-mission-step="1">Конфигурация</li>
+                <li data-mission-step="2">Время и тариф</li>
+                <li data-mission-step="3">Место</li>
+                <li data-mission-step="4">Данные игрока</li>
+              </ol>
+              <dl class="summary-details">
+                <div>
+                  <dt>Зона</dt>
+                  <dd id="summaryZone">Standard</dd>
+                </div>
+                <div>
+                  <dt>Тариф</dt>
+                  <dd id="summaryRate">Почасовой</dd>
+                </div>
+                <div>
+                  <dt>Дата и время</dt>
+                  <dd id="summaryDate">—</dd>
+                </div>
+                <div>
+                  <dt>Длительность</dt>
+                  <dd id="summaryDuration">1 ч</dd>
+                </div>
+                <div>
+                  <dt>Место</dt>
+                  <dd id="summarySeat">—</dd>
+                </div>
+              </dl>
+              <div class="summary-total">
+                <span>ИТОГО</span><strong id="summaryTotal">90 ₴</strong>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contacts" class="alt">
+      <div class="wrap two">
+        <div>
+          <h2>Контакты</h2>
+          <p>Сеул, ул. Итаевон-ро 55-гил</p>
+          <p class="mono">+380 XX XXX XX XX</p>
+          <p>Ежедневно, круглосуточно</p>
+          <p>Telegram: @awaken_club</p>
+        </div>
+        <div class="panel photo map">
+          <span class="mono tag">[ КАРТА ]
+            <span class="cipher-fragment" title="Фрагмент 6/6" aria-hidden="true">N</span></span><svg class="citymap"
+            viewBox="0 0 400 220" aria-hidden="true">
+            <path d="M0 60h400M0 140h400M90 0v220M250 0v220M0 200L400 20" />
+            <path class="river" d="M0 180q100-40 200-10t200-60" />
+            <circle class="ring" cx="250" cy="140" r="6" />
+            <circle cx="250" cy="140" r="6" fill="#3DE6FF" />
+            <text x="264" y="132">AWAKEN</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <b class="logo-f">AWAKEN</b>
+      <div class="fn">
+        <a href="#tariffs">Тарифы</a><a href="#zones">Зоны</a><a href="#quests">Акции</a><a
+          href="#contacts">Контакты</a>
+      </div>
+      <span class="muted">Правила клуба · Политика конфиденциальности</span>
+      <span class="cipher-hint mono">Собери 6 фрагментов в код</span><span class="muted">© 2026 AWAKEN</span>
+    </div>
+  </footer>
+
+  <dialog id="compareDialog" class="compare-dialog" aria-labelledby="compareTitle">
+    <button id="compareClose" class="compare-close" type="button" aria-label="Закрыть сравнение">
+      ×
+    </button>
+    <p class="mono compare-kicker">[ СРАВНЕНИЕ КОНФИГУРАЦИЙ ]</p>
+    <h2 id="compareTitle">Сравнение зон</h2>
+    <div id="compareContent"></div>
+  </dialog>
+
+  <dialog id="bookingComplete" class="booking-complete" aria-labelledby="completeTitle">
+    <button id="completeClose" class="complete-close" type="button" aria-label="Закрыть подтверждение">
+      ×
+    </button>
+    <div class="complete-kicker mono">[ МИССИЯ ЗАВЕРШЕНА ]</div>
+    <div class="complete-mark" aria-hidden="true">✓</div>
+    <h2 id="completeTitle">Бронь подтверждена</h2>
+    <p id="completeMessage">Твоё место ждёт тебя. Увидимся в игре!</p>
+    <dl class="complete-details">
+      <div>
+        <dt>Зона</dt>
+        <dd id="completeZone"></dd>
+      </div>
+      <div>
+        <dt>Место</dt>
+        <dd id="completeSeat"></dd>
+      </div>
+      <div>
+        <dt>Дата и время</dt>
+        <dd id="completeDate"></dd>
+      </div>
+      <div>
+        <dt>Длительность</dt>
+        <dd id="completeDuration"></dd>
+      </div>
+      <div>
+        <dt>ИТОГО</dt>
+        <dd id="completeTotal"></dd>
+      </div>
+    </dl>
+    <div class="complete-actions">
+      <button id="completeCalendar" class="btn ghost" type="button">В календарь</button>
+      <button id="completeNew" class="btn" type="button">Новая бронь</button>
+    </div>
+  </dialog>
+
+  <div id="toasts"></div>
+  <button id="mobileBookingSummary" type="button" aria-label="Сводка миссии и сумма брони">
+    <span><small class="mono">МИССИЯ</small><strong id="mobileSummaryZone">Standard</strong><em
+        id="mobileSummarySeat">Место —</em></span>
+    <b><small class="mono">ИТОГО</small><strong id="mobileSummaryTotal">90 ₴</strong></b>
+  </button>
+  <button id="sound" class="mono" aria-pressed="false">ЗВУК: ВЫКЛ</button>
+  <button id="fullscreen" class="mono" type="button" aria-label="Включить полноэкранный режим"
+    title="Включить полноэкранный режим" aria-pressed="false">
+    ⛶
+  </button>
+  <a class="btn sticky" href="#map">Забронировать</a>
+  <script src="main (6).js"></script>
+</body>
+
+</html>
