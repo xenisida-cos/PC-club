@@ -13,20 +13,23 @@
   <meta id="ogTitle" property="og:title" content="AWAKEN | Игровые зоны, тарифы и демо-бронирование" />
   <meta id="ogDescription" property="og:description"
     content="Учебный демосайт AWAKEN: игровые зоны, условные тарифы и демонстрационная форма бронирования компьютерного клуба." />
+  <meta id="twitterTitle" name="twitter:title" content="AWAKEN | Игровые зоны, тарифы и демо-бронирование" />
+  <meta id="twitterDescription" name="twitter:description"
+    content="Учебный демосайт AWAKEN: игровые зоны, условные тарифы и демонстрационная форма бронирования компьютерного клуба." />
   <meta property="og:image" content="https://cyberplaza.com.ua/img/plaza-poster.jpg" />
   <meta property="og:image:alt" content="AWAKEN — игровой клуб" />
   <meta id="ogLocale" property="og:locale" content="ru_RU" />
   <meta property="og:site_name" content="AWAKEN" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5WP4PR1TVZ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5WP4PR1TVZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
 
-  gtag('config', 'G-5WP4PR1TVZ');
-</script>
+    gtag('config', 'G-5WP4PR1TVZ');
+  </script>
   <link
     href="https://fonts.googleapis.com/css2?family=Tektur:wght@500;700&family=Exo+2:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap"
     rel="stylesheet" />
@@ -86,6 +89,19 @@
         <p class="mono mini">ПК: 60 | Пинг: &lt;5 мс | Открыто: 24/7</p>
         <div class="row">
           <a class="btn" href="#map">Забронировать место</a><a class="btn ghost" href="#tariffs">Смотреть тарифы</a>
+        </div>
+        <div class="cipher-reward" id="cipherReward">
+          <div class="cipher-reward-copy">
+            <span class="mono cipher-reward-label">[ СЕКРЕТНЫЙ БОНУС ]</span>
+            <p>Найди 6 фрагментов на странице, собери код и получи скидку 10% на бронь.</p>
+          </div>
+          <form class="cipher-form" id="cipherForm">
+            <label class="sr-only" for="cipherCodeInput">Код из шести фрагментов</label>
+            <input id="cipherCodeInput" type="text" placeholder="ВВЕДИ КОД" maxlength="6" autocomplete="off"
+              autocapitalize="characters" spellcheck="false" aria-describedby="cipherStatus" />
+            <button class="btn ghost" id="cipherSubmit" type="submit">Применить</button>
+          </form>
+          <p class="cipher-status mono" id="cipherStatus" role="status" aria-live="polite"></p>
         </div>
         <div class="system-console" role="status">
           <span class="console-led" aria-hidden="true"></span>
@@ -159,13 +175,9 @@
         <div class="panel photo">
           <span class="mono tag">[ ЗАЛ ]
             <span class="cipher-fragment" title="Фрагмент 2/6" aria-hidden="true">W</span></span>
-          <img
-            src="https://cyberplaza.com.ua/img/plaza-poster.jpg"
-            alt="Фото игрового клуба AWAKEN"
-            loading="lazy"
+          <img src="https://cyberplaza.com.ua/img/plaza-poster.jpg" alt="Фото игрового клуба AWAKEN" loading="lazy"
             decoding="async"
-            style="display:block; width:100%; height:auto; border-radius:12px; border:1px solid rgba(61,230,255,.35); object-fit:cover;"
-          />
+            style="display:block; width:100%; height:auto; border-radius:12px; border:1px solid rgba(61,230,255,.35); object-fit:cover;" />
           <p class="muted">Фото клуба</p>
           <span class="cipher-fragment" title="Фрагмент 3/6" aria-hidden="true">A</span>
         </div>
@@ -317,7 +329,9 @@
                     <option>3</option>
                     <option>5</option>
                   </select></label>
-                <p class="mono total" id="total"></p>
+                <p class="mono total price-pair" id="total">
+                    <span>ИТОГО:</span><del id="totalBefore" hidden></del><strong id="totalCurrent"></strong>
+                </p>
               </div>
               <div class="step" data-step="3" hidden>
                 <div class="legend mono">
@@ -373,9 +387,16 @@
                   <dt>Место</dt>
                   <dd id="summarySeat">—</dd>
                 </div>
+                <div id="summaryDiscountRow" hidden>
+                  <dt>Скидка по коду</dt>
+                  <dd id="summaryDiscount">−10%</dd>
+                </div>
               </dl>
               <div class="summary-total">
-                <span>ИТОГО</span><strong id="summaryTotal">90 ₴</strong>
+                <span>ИТОГО</span>
+                <span class="price-pair">
+                  <del id="summaryBefore" hidden></del><strong id="summaryTotal">90 ₴</strong>
+                </span>
               </div>
             </aside>
           </div>
@@ -415,7 +436,7 @@
           href="#contacts">Контакты</a>
       </div>
       <span class="muted">Правила клуба · Политика конфиденциальности</span>
-      <span class="cipher-hint mono">Собери 6 фрагментов в код</span><span class="muted">© 2026 AWAKEN</span>
+      <span class="muted">© 2026 AWAKEN</span>
     </div>
   </footer>
 
@@ -455,7 +476,13 @@
       </div>
       <div>
         <dt>ИТОГО</dt>
-        <dd id="completeTotal"></dd>
+        <dd class="price-pair">
+          <del id="completeBefore" hidden></del><strong id="completeTotal"></strong>
+        </dd>
+      </div>
+      <div id="completeDiscountRow" hidden>
+        <dt>Скидка по коду</dt>
+        <dd id="completeDiscount"></dd>
       </div>
     </dl>
     <div class="complete-actions">
@@ -468,7 +495,9 @@
   <button id="mobileBookingSummary" type="button" aria-label="Сводка миссии и сумма брони">
     <span><small class="mono">МИССИЯ</small><strong id="mobileSummaryZone">Standard</strong><em
         id="mobileSummarySeat">Место —</em></span>
-    <b><small class="mono">ИТОГО</small><strong id="mobileSummaryTotal">90 ₴</strong></b>
+    <b><small class="mono">ИТОГО</small><span class="price-pair">
+      <del id="mobileSummaryBefore" hidden></del><strong id="mobileSummaryTotal">90 ₴</strong>
+    </span></b>
   </button>
   <button id="sound" class="mono" aria-pressed="false">ЗВУК: ВЫКЛ</button>
   <button id="fullscreen" class="mono" type="button" aria-label="Включить полноэкранный режим"

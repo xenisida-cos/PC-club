@@ -64,6 +64,7 @@ const reviews = [
 const $ = (s) => document.querySelector(s);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const state = { zone: 'Standard', seat: null, step: 1 };
+let puzzleDiscountApplied = false;
 let languageReady = false;
 let calmMode = (() => {
   try {
@@ -90,7 +91,7 @@ function finishLoad() {
   }
   try {
     localStorage.setItem('awk', '1');
-  } catch (e) {}
+  } catch (e) { }
 }
 if (visited || reduced) finishLoad();
 else {
@@ -283,8 +284,8 @@ function openExpandedCard(card) {
   expandDialog.setAttribute(
     'aria-label',
     card.querySelector('h3')?.textContent.trim() ||
-      card.querySelector('.tag')?.textContent.trim() ||
-      'Увеличенный просмотр',
+    card.querySelector('.tag')?.textContent.trim() ||
+    'Увеличенный просмотр',
   );
   isClosingExpandedDialog = false;
   expandDialog.classList.remove('closing');
@@ -417,10 +418,41 @@ const localISO = (d = new Date()) =>
 $('#fDate').min = $('#fDate').value = localISO();
 $('#fDate').max = localISO(new Date(Date.now() + 30 * 864e5));
 
+function currentBooking() {
+  return {
+    zone: state.zone,
+    dur: +$('#fDur').value,
+    rate: +$('#fTariff').value,
+    discount: puzzleDiscountApplied ? 0.1 : 0,
+  };
+}
+function bookingBaseTotal(booking) {
+  return zones[booking.zone].price * booking.dur * booking.rate;
+}
+function bookingTotal(booking) {
+  return Math.round(bookingBaseTotal(booking) * (1 - (booking.discount || 0)));
+}
+function formatBookingPrice(amount, locale) {
+  return `${new Intl.NumberFormat(locale).format(amount)} ₴`;
+}
+function updatePricePair(beforeId, currentId, baseTotal, total, discounted, locale) {
+  const before = $(`#${beforeId}`);
+  before.textContent = formatBookingPrice(Math.round(baseTotal), locale);
+  before.hidden = !discounted;
+  $(`#${currentId}`).textContent = formatBookingPrice(total, locale);
+}
 function calc() {
-  const z = zones[state.zone];
-  const sum = z.price * $('#fDur').value * $('#fTariff').value;
-  $('#total').textContent = 'ИТОГО: ' + Math.round(sum) + ' ₴';
+  const booking = currentBooking();
+  const baseTotal = bookingBaseTotal(booking);
+  const locale = document.documentElement.lang;
+  updatePricePair(
+    'totalBefore',
+    'totalCurrent',
+    baseTotal,
+    bookingTotal(booking),
+    booking.discount > 0,
+    locale,
+  );
   refreshBookingSummary();
 }
 ['#fTariff', '#fDur'].forEach((s) => ($(s).onchange = calc));
@@ -437,22 +469,32 @@ function refreshBookingSummary() {
   const dateValue = $('#fDate').value;
   const date = dateValue
     ? new Date(`${dateValue}T12:00:00`).toLocaleDateString(locale, {
-        day: 'numeric',
-        month: 'short',
-      })
+      day: 'numeric',
+      month: 'short',
+    })
     : tr('Не выбрано');
-  const sum = zones[state.zone].price * $('#fDur').value * $('#fTariff').value;
+  const booking = currentBooking();
+  const total = bookingTotal(booking);
+  const baseTotal = bookingBaseTotal(booking);
   $('#missionTitle').textContent = tr(missionTitles[state.step - 1]);
   $('#summaryZone').textContent = state.zone;
   $('#summaryRate').textContent = $('#fTariff').selectedOptions[0]?.textContent || tr('Не выбрано');
   $('#summaryDate').textContent = `${date} · ${$('#fTime').value}`;
   $('#summaryDuration').textContent = tr(`${$('#fDur').value} ч`);
   $('#summarySeat').textContent = state.seat ? `#${state.seat}` : tr('Не выбрано');
-  $('#summaryTotal').textContent = `${new Intl.NumberFormat(locale).format(Math.round(sum))} ₴`;
+  $('#summaryDiscountRow').hidden = !puzzleDiscountApplied;
+  $('#summaryDiscount').textContent = '−10%';
+  updatePricePair('summaryBefore', 'summaryTotal', baseTotal, total, booking.discount > 0, locale);
   $('#mobileSummaryZone').textContent = state.zone;
   $('#mobileSummarySeat').textContent = tr('Место') + ' ' + (state.seat ? `#${state.seat}` : '—');
-  $('#mobileSummaryTotal').textContent =
-    `${new Intl.NumberFormat(locale).format(Math.round(sum))} ₴`;
+  updatePricePair(
+    'mobileSummaryBefore',
+    'mobileSummaryTotal',
+    baseTotal,
+    total,
+    booking.discount > 0,
+    locale,
+  );
 }
 
 function isBusy(i) {
@@ -558,8 +600,7 @@ $('#forward').onclick = () => {
     zone: state.zone,
     date: $('#fDate').value,
     time: $('#fTime').value,
-    dur: +$('#fDur').value,
-    rate: +$('#fTariff').value,
+    ...currentBooking(),
   };
   saveB(lastBooking);
   setConsoleMessage('Бронирование подтверждено.');
@@ -592,9 +633,13 @@ function showBookingComplete(booking) {
   $('#completeSeat').textContent = `#${booking.seat}`;
   $('#completeDate').textContent = `${formatBookingDate(booking)} · ${booking.time}`;
   $('#completeDuration').textContent = tr(`${booking.dur} ч`);
-  $('#completeTotal').textContent = `${new Intl.NumberFormat(locale).format(
-    Math.round(zones[booking.zone].price * booking.dur * booking.rate),
-  )} ₴`;
+  const baseTotal = Math.round(bookingBaseTotal(booking));
+  const total = bookingTotal(booking);
+  updatePricePair('completeBefore', 'completeTotal', baseTotal, total, booking.discount > 0, locale);
+  $('#completeDiscountRow').hidden = !booking.discount;
+  $('#completeDiscount').textContent = `−${new Intl.NumberFormat(locale).format(
+    baseTotal - total,
+  )} ₴ (10%)`;
   bookingDialogReturnFocus = $('#forward');
   completeDialog.showModal();
   $('#completeNew').focus();
@@ -832,7 +877,7 @@ let snd = false,
   actx;
 try {
   snd = localStorage.getItem('awk-snd') === '1';
-} catch (e) {}
+} catch (e) { }
 const soundCues = {
   toggle: [660],
   zone: [440, 587],
@@ -888,7 +933,7 @@ $('#sound').onclick = () => {
   snd = !snd;
   try {
     localStorage.setItem('awk-snd', snd ? '1' : '0');
-  } catch (e) {}
+  } catch (e) { }
   drawSound();
   if (snd) playUiCue('toggle');
 };
@@ -898,13 +943,13 @@ drawSound();
 let brandAchievementEarned = false;
 try {
   brandAchievementEarned = sessionStorage.getItem('awk-brand-achievement') === '1';
-} catch (e) {}
+} catch (e) { }
 $('.logo').addEventListener('click', () => {
   if (brandAchievementEarned) return;
   brandAchievementEarned = true;
   try {
     sessionStorage.setItem('awk-brand-achievement', '1');
-  } catch (e) {}
+  } catch (e) { }
   toast('[ СИСТЕМА ] Скрытый уровень открыт');
 });
 
@@ -938,6 +983,14 @@ GAMING NETWORK¦ІГРОВА МЕРЕЖА¦GAMING NETWORK
 Фрагмент 4/6¦Фрагмент 4/6¦Fragment 4/6
 Фрагмент 5/6¦Фрагмент 5/6¦Fragment 5/6
 Фрагмент 6/6¦Фрагмент 6/6¦Fragment 6/6
+[ СЕКРЕТНЫЙ БОНУС ]¦[ СЕКРЕТНИЙ БОНУС ]¦[ SECRET BONUS ]
+Найди 6 фрагментов на странице, собери код и получи скидку 10% на бронь.¦Знайди 6 фрагментів на сторінці, склади код і отримай знижку 10% на бронювання.¦Find all 6 fragments on the page, enter the code and get 10% off your booking.
+Код из шести фрагментов¦Код із шести фрагментів¦Code from the six fragments
+ВВЕДИ КОД¦ВВЕДИ КОД¦ENTER CODE
+Применить¦Застосувати¦Apply
+Код принят — скидка 10% применена к бронированию.¦Код прийнято — знижку 10% застосовано до бронювання.¦Code accepted — 10% off applied to your booking.
+Код не подошёл. Проверь собранные фрагменты.¦Код не підійшов. Перевір зібрані фрагменти.¦That code did not match. Check the fragments you found.
+Скидка по коду¦Знижка за кодом¦Code discount
 Включить полноэкранный режим¦Увімкнути повноекранний режим¦Enter fullscreen
 Выйти из полноэкранного режима¦Вийти з повноекранного режиму¦Exit fullscreen
 Полноэкранный режим недоступен в этом браузере.¦Повноекранний режим недоступний у цьому браузері.¦Fullscreen is not available in this browser.
@@ -1038,7 +1091,6 @@ RTX 4080, 240 Гц, кресла премиум¦RTX 4080, 240 Гц, крісл�
 Ежедневно, круглосуточно¦Щодня, цілодобово¦Daily, 24/7
 [ КАРТА ]¦[ КАРТА ]¦[ MAP ]
 Правила клуба · Политика конфиденциальности¦Правила клубу · Політика конфіденційності¦Club rules · Privacy policy
-Собери 6 фрагментов в код¦Збери 6 фрагментів у код¦Collect 6 fragments to form a code
 OK¦ГАРАЗД¦OK
 СВОДКА МИССИИ¦ЗВЕДЕННЯ МІСІЇ¦MISSION LOADOUT
 ТЕКУЩИЙ ЭТАП¦ПОТОЧНИЙ ЕТАП¦CURRENT OBJECTIVE
@@ -1447,14 +1499,14 @@ function setLang(l) {
   refreshBookingSummary();
   try {
     localStorage.setItem('awk-lang', l);
-  } catch (e) {}
+  } catch (e) { }
 }
 $('#lang').onchange = (e) => setLang(e.target.value);
 $('#calmMode').addEventListener('click', () => {
   calmMode = !calmMode;
   try {
     localStorage.setItem('awk-calm', calmMode ? '1' : '0');
-  } catch (e) {}
+  } catch (e) { }
   syncCalmMode();
   setConsoleMessage(
     calmMode ? 'Декоративные эффекты приглушены.' : 'Система готова. Выберите зону.',
@@ -1469,26 +1521,30 @@ $('#compareDialog').addEventListener('click', (e) => {
   if (e.target === $('#compareDialog')) $('#compareDialog').close();
 });
 
-let cipherProgress = 0,
-  cipherUnlocked = false;
 const cipherCode = 'AWAKEN';
-document.addEventListener('keydown', (e) => {
-  if (
-    cipherUnlocked ||
-    e.repeat ||
-    e.ctrlKey ||
-    e.altKey ||
-    e.metaKey ||
-    e.target.closest('input, textarea, select, [contenteditable="true"]')
-  )
+const cipherForm = $('#cipherForm');
+const cipherInput = $('#cipherCodeInput');
+cipherInput.addEventListener('input', () => {
+  cipherInput.value = cipherInput.value.toUpperCase();
+  cipherInput.setAttribute('aria-invalid', 'false');
+});
+cipherForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const status = $('#cipherStatus');
+  if (cipherInput.value.trim().toUpperCase() !== cipherCode) {
+    status.textContent = tr('Код не подошёл. Проверь собранные фрагменты.');
+    status.dataset.state = 'error';
+    cipherInput.setAttribute('aria-invalid', 'true');
     return;
-  const key = e.key.toUpperCase();
-  cipherProgress =
-    key === cipherCode[cipherProgress] ? cipherProgress + 1 : key === cipherCode[0] ? 1 : 0;
-  if (cipherProgress === cipherCode.length) {
-    cipherUnlocked = true;
-    toast('[ СИСТЕМА ] Код AWAKEN принят. Скрытый уровень открыт', false, 9000);
   }
+  puzzleDiscountApplied = true;
+  status.textContent = tr('Код принят — скидка 10% применена к бронированию.');
+  status.dataset.state = 'success';
+  cipherInput.setAttribute('aria-invalid', 'false');
+  cipherInput.readOnly = true;
+  $('#cipherSubmit').disabled = true;
+  $('#cipherReward').classList.add('is-redeemed');
+  calc();
 });
 
 const fullscreenButton = $('#fullscreen');
@@ -1564,7 +1620,7 @@ bgm.preload = 'none';
 let fade;
 function music(on) {
   clearInterval(fade);
-  if (on) bgm.play().catch(() => {});
+  if (on) bgm.play().catch(() => { });
   fade = setInterval(() => {
     bgm.volume = Math.min(0.2, Math.max(0, bgm.volume + (on ? 0.02 : -0.02)));
     if (!on && bgm.volume <= 0) {
@@ -1594,7 +1650,7 @@ const booked = () => {
 const saveB = (b) => {
   try {
     localStorage.setItem('awk-b', JSON.stringify([...booked(), b]));
-  } catch (e) {}
+  } catch (e) { }
 };
 const delB = (b) => {
   try {
@@ -1602,7 +1658,7 @@ const delB = (b) => {
       'awk-b',
       JSON.stringify(booked().filter((x) => JSON.stringify(x) !== JSON.stringify(b))),
     );
-  } catch (e) {}
+  } catch (e) { }
 };
 const _busy = isBusy;
 isBusy = (i) =>
